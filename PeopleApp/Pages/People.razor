@@ -1,0 +1,77 @@
+﻿
+@page "/people"
+@using DataAccessLibrary.Models
+@using DataAccessLibrary.Interfaces
+@using PeopleApp.Models
+
+@inject IPeopleService PeopleService
+
+<PageTitle>People</PageTitle>
+<h3>People page</h3>
+<h4>Add person</h4>
+<EditForm Model="@person" OnValidSubmit="@AddPerson">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+    
+    <InputText id="firstName" @bind-Value="person.FirstName"></InputText>
+    <InputText id="lastName" @bind-Value="person.LastName"></InputText>
+    <InputText id="emailAddress" @bind-Value="person.EmailAdress"></InputText>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+<h4>People</h4>
+
+@if (people == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email address</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var person in people)
+        {
+            <tr>
+                <td>@person.FirstName</td>
+                <td>@person.LastName</td>
+                <td>@person.EmailAdress</td>
+            </tr>
+            
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IList<Person> people;
+    private PersonDto person = new PersonDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        people = await PeopleService.GetAll();
+    }
+
+    private async Task AddPerson()
+    {
+        var dbPerson = new Person
+        {
+            FirstName = this.person.FirstName,
+            LastName = this.person.LastName,
+            EmailAdress = this.person.EmailAdress
+        };
+
+        await PeopleService.AddPerson(dbPerson);
+
+        people.Add(dbPerson);
+
+        person = new PersonDto();
+    }
+}
