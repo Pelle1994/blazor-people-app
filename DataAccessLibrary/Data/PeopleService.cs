@@ -35,6 +35,15 @@ namespace DataAccessLibrary.Data
 
             await context.SaveChangesAsync();
         }
+
+        public async Task DeletePerson(Person person)
+        {
+            var context = await _fact.CreateDbContextAsync();
+
+            context.Set<Person>().Remove(person);
+
+            await context.SaveChangesAsync();
+        }
     }
 
   

@@ -12,5 +12,7 @@ namespace DataAccessLibrary.Interfaces
         Task<IList<Person>> GetAll();
 
         Task AddPerson(Person person);
+
+        Task DeletePerson(Person person);
     }
 }

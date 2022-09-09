@@ -34,15 +34,18 @@ else
             <th>First name</th>
             <th>Last name</th>
             <th>Email address</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         @foreach (var person in people)
         {
             <tr>
+
                 <td>@person.FirstName</td>
                 <td>@person.LastName</td>
                 <td>@person.EmailAdress</td>
+                <td><button type="button" class="btn btn-danger" @onclick="() => DeletePerson(person)">Delete</button></td>
             </tr>
             
         }
@@ -73,5 +76,13 @@ else
         people.Add(dbPerson);
 
         person = new PersonDto();
+    }
+
+    private async Task DeletePerson(Person person)
+    {
+        await PeopleService.DeletePerson(person);
+
+        people.Remove(person);
+
     }
 }
